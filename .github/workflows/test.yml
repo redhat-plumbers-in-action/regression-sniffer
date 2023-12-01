@@ -1,24 +1,40 @@
-name: 'build-test'
-on: # rebuild any PRs and main branch changes
-  pull_request:
+name: Unit and Integration tests
+
+on:
   push:
-    branches:
-      - main
-      - 'releases/*'
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  build: # make sure build/ci work properly
+  test:
+    name: Node.js
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - run: |
-          npm install
-      - run: |
-          npm run all
-  test: # make sure the action works on a clean machine without building
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v3
         with:
-          milliseconds: 1000
+          node-version: 20
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
+      - name: Install
+        run: yarn install
+
+      - name: Compile
+        run: yarn build
+
+      - name: Package
+        run: yarn run package
+
+      - name: Test
+        run: yarn test
+
+      - name: Codecov
+        uses: codecov/codecov-action@v3

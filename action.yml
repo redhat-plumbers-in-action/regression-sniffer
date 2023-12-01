@@ -1,11 +1,45 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: Regression sniffer
+description: Loyal GitHub action that sniffs out any mentions, follow-up and revert commits of your cherry-picked commits.
+
+branding:
+  icon: git-branch
+  color: blue
+
 inputs:
-  milliseconds: # change this
+  check-mentions:
+    required: false
+    default: 'true'
+    description: Look for mentions of original commits
+  check-follow-up:
+    required: false
+    default: 'true'
+    description: Look for follow-up commits
+  check-revert:
+    required: false
+    default: 'true'
+    description: Look for revert commits
+
+  pr-metadata:
+    required: false
+    description: Pull Request metadata
+  config-path:
+    required: false
+    default: .github/regression-sniffer.yml
+    description: Path to configuration file
+
+  status-title:
+    required: false
+    default: Follow-up detection
+    description: H3 title of status message
+
+  token:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: GitHub TOKEN or PAT
+
+outputs:
+  status:
+    description: Status message of the follow-up detection
+
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: node20
+  main: dist/index.js
