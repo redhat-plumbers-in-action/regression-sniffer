@@ -2,15 +2,15 @@ import { Commit } from './commit';
 
 import { SingleCommitMetadata } from './schema/input';
 
-type Relation<H extends string, T extends string> = {
+export type Relation<H extends string, T extends string> = {
   heading: H;
   tableHeader: T;
 };
-type Mention = Relation<'Commit mentions', 'mention'>;
-type FollowUp = Relation<'Follow-ups', 'follow-up'>;
-type Revert = Relation<'Reverts', 'revert'>;
+export type Mention = Relation<'Commit mentions', 'mention'>;
+export type FollowUp = Relation<'Follow-ups', 'follow-up'>;
+export type Revert = Relation<'Reverts', 'revert'>;
 
-type SupportedRelations = Mention | FollowUp | Revert;
+export type SupportedRelations = Mention | FollowUp | Revert;
 
 export class UpstreamRelatedCommits<R extends SupportedRelations> {
   results: {
@@ -47,7 +47,7 @@ export class UpstreamRelatedCommits<R extends SupportedRelations> {
       this.relation.tableHeader,
     ]
   ): string {
-    return `| ${header.join('|')} |\n|---|---|`;
+    return `| ${header.join(' | ')} |\n|---|---|`;
   }
 
   getTableEntry(singleCommitRelation: (typeof this.results)[number]): string {

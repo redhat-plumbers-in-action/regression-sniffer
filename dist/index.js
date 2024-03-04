@@ -35277,7 +35277,7 @@ class UpstreamRelatedCommits {
         'commit',
         this.relation.tableHeader,
     ]) {
-        return `| ${header.join('|')} |\n|---|---|`;
+        return `| ${header.join(' | ')} |\n|---|---|`;
     }
     getTableEntry(singleCommitRelation) {
         return `| ${singleCommitRelation.downstreamCommit.url} - _${singleCommitRelation.downstreamCommit.message.title}_ | ${singleCommitRelation.commits.map(commit => `${this.url}/${commit.sha}`).join('</br>')} |`;
