@@ -31080,11 +31080,16 @@ async function action(octokit, pr) {
     await pr.setLabels(labels.add);
     err.push(...statusSummary, ...statusTables);
     if (err.length > 0) {
-        (0,error/* raise */.O)(
+        const status = 
         // Show '#### Failed' header only when there is a failed message
         getFailedMessage(err, statusSummary.length > 0) +
             '\n\n' +
-            getSuccessMessage(message));
+            getSuccessMessage(message);
+        // Don't raise error if waive label is set
+        if (isWaived) {
+            return status;
+        }
+        (0,error/* raise */.O)(status);
     }
     // success message only when waive label is set otherwise don't show success message only failed message
     if (message.length > 0) {
@@ -42470,10 +42475,15 @@ class ZodPipeline extends ZodType {
 class ZodReadonly extends ZodType {
     _parse(input) {
         const result = this._def.innerType._parse(input);
-        if (isValid(result)) {
-            result.value = Object.freeze(result.value);
-        }
-        return result;
+        const freeze = (data) => {
+            if (isValid(data)) {
+                data.value = Object.freeze(data.value);
+            }
+            return data;
+        };
+        return isAsync(result)
+            ? result.then((data) => freeze(data))
+            : freeze(result);
     }
     unwrap() {
         return this._def.innerType;

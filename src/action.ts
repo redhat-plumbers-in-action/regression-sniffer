@@ -214,12 +214,18 @@ async function action(
   err.push(...statusSummary, ...statusTables);
 
   if (err.length > 0) {
-    raise(
+    const status =
       // Show '#### Failed' header only when there is a failed message
       getFailedMessage(err, statusSummary.length > 0) +
-        '\n\n' +
-        getSuccessMessage(message)
-    );
+      '\n\n' +
+      getSuccessMessage(message);
+
+    // Don't raise error if waive label is set
+    if (isWaived) {
+      return status;
+    }
+
+    raise(status);
   }
 
   // success message only when waive label is set otherwise don't show success message only failed message
