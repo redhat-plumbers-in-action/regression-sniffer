@@ -162,13 +162,13 @@ async function action(
       );
     } else {
       if (pr.currentLabels.includes(config.labels['revert'])) {
-        pr.removeLabel(config.labels['revert']);
+        await pr.removeLabel(config.labels['revert']);
       }
     }
     statusTables.push(detectedReverts.getStatusMessage() + '\n');
   } else {
     if (pr.currentLabels.includes(config.labels['revert'])) {
-      pr.removeLabel(config.labels['revert']);
+      await pr.removeLabel(config.labels['revert']);
     }
   }
 
@@ -181,13 +181,13 @@ async function action(
       );
     } else {
       if (pr.currentLabels.includes(config.labels['follow-up'])) {
-        pr.removeLabel(config.labels['follow-up']);
+        await pr.removeLabel(config.labels['follow-up']);
       }
     }
     statusTables.push(detectedFollowUps.getStatusMessage() + '\n');
   } else {
     if (pr.currentLabels.includes(config.labels['follow-up'])) {
-      pr.removeLabel(config.labels['follow-up']);
+      await pr.removeLabel(config.labels['follow-up']);
     }
   }
 
@@ -200,13 +200,13 @@ async function action(
       );
     } else {
       if (pr.currentLabels.includes(config.labels['mention'])) {
-        pr.removeLabel(config.labels['mention']);
+        await pr.removeLabel(config.labels['mention']);
       }
     }
     statusTables.push(detectedMentions.getStatusMessage() + '\n');
   } else {
     if (pr.currentLabels.includes(config.labels['mention'])) {
-      pr.removeLabel(config.labels['mention']);
+      await pr.removeLabel(config.labels['mention']);
     }
   }
 
