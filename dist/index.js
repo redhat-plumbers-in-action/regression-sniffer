@@ -31031,14 +31031,14 @@ async function action(octokit, pr) {
         }
         else {
             if (pr.currentLabels.includes(config.labels['revert'])) {
-                pr.removeLabel(config.labels['revert']);
+                await pr.removeLabel(config.labels['revert']);
             }
         }
         statusTables.push(detectedReverts.getStatusMessage() + '\n');
     }
     else {
         if (pr.currentLabels.includes(config.labels['revert'])) {
-            pr.removeLabel(config.labels['revert']);
+            await pr.removeLabel(config.labels['revert']);
         }
     }
     if (detectedFollowUps.isRelatedCommitDetected()) {
@@ -31049,14 +31049,14 @@ async function action(octokit, pr) {
         }
         else {
             if (pr.currentLabels.includes(config.labels['follow-up'])) {
-                pr.removeLabel(config.labels['follow-up']);
+                await pr.removeLabel(config.labels['follow-up']);
             }
         }
         statusTables.push(detectedFollowUps.getStatusMessage() + '\n');
     }
     else {
         if (pr.currentLabels.includes(config.labels['follow-up'])) {
-            pr.removeLabel(config.labels['follow-up']);
+            await pr.removeLabel(config.labels['follow-up']);
         }
     }
     if (detectedMentions.isRelatedCommitDetected()) {
@@ -31067,14 +31067,14 @@ async function action(octokit, pr) {
         }
         else {
             if (pr.currentLabels.includes(config.labels['mention'])) {
-                pr.removeLabel(config.labels['mention']);
+                await pr.removeLabel(config.labels['mention']);
             }
         }
         statusTables.push(detectedMentions.getStatusMessage() + '\n');
     }
     else {
         if (pr.currentLabels.includes(config.labels['mention'])) {
-            pr.removeLabel(config.labels['mention']);
+            await pr.removeLabel(config.labels['mention']);
         }
     }
     await pr.setLabels(labels.add);
