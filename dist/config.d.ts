@@ -7,5 +7,5 @@ export declare class Config {
     filters: Filters;
     constructor(config: unknown);
     static getConfig(octokit: CustomOctokit): Promise<Config>;
-    static isConfigEmpty(config: unknown): boolean;
+    static isConfigEmpty(config: unknown): config is null | undefined;
 }

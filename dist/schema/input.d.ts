@@ -133,8 +133,8 @@ export declare const pullRequestMetadataSchema: z.ZodObject<{
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
     number: number;
-    url: string;
     base: string;
+    url: string;
     commits: {
         url: string;
         sha: string;
@@ -147,8 +147,8 @@ export declare const pullRequestMetadataSchema: z.ZodObject<{
     }[];
 }, {
     number: number;
-    url: string;
     base: string;
+    url: string;
     commits: {
         url: string;
         sha: string;
