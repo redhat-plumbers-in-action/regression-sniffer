@@ -137,6 +137,7 @@ Action currently accepts the following options:
 
 - uses: redhat-plumbers-in-action/regression-sniffer@v1
   with:
+    check-mentions:   <boolean>
     check-follow-up:  <boolean>
     check-revert:     <boolean>
     pr-metadata:      <pr-metadata.json>
@@ -146,6 +147,13 @@ Action currently accepts the following options:
 
 # ...
 ```
+
+### check-mentions
+
+Check if Pull Request has some commit mentions related to cherri-picked commits in upstream available.
+
+* default value: `true`
+* requirements: `optional`
 
 ### check-follow-up
 
