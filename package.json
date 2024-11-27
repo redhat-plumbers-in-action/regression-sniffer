@@ -1,7 +1,6 @@
 {
   "name": "regression-sniffer",
-  "version": "1.0.0",
-  "private": true,
+  "version": "1.0.4",
   "description": "Loyal GitHub action that sniffs out any follow-up and revert commit of your cherry-picked commit",
   "main": "src/main.ts",
   "scripts": {
