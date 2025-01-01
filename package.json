@@ -41,7 +41,7 @@
     "@types/node": "22.10.1",
     "@vercel/ncc": "0.38.3",
     "@vitest/coverage-v8": "2.1.6",
-    "prettier": "3.4.1",
+    "prettier": "3.4.2",
     "typescript": "5.7.2",
     "vitest": "2.1.6"
   }
