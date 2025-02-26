@@ -17,5 +17,5 @@ describe('test error related functionality', () => {
   });
 
   test('raise()', () =>
-    expect(() => raise('new error')).toThrow(new Error('new error')));
+    expect(() => raise('new error')).toThrowError(RegressionError));
 });
