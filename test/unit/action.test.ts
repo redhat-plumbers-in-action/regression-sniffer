@@ -61,6 +61,7 @@ describe('test action function', () => {
     const { Config } = await import('../../src/config');
     const { Git } = await import('../../src/git');
     const { UpstreamRelatedCommits } = await import('../../src/upstream');
+    const { SingleBar, Presets } = await import('cli-progress');
 
     // Setup mocks
     vi.mocked(getBooleanInput).mockReturnValue(true);
@@ -133,6 +134,21 @@ describe('test action function', () => {
 
     // Run the action
     await action({} as any, mockPullRequest as any);
+
+    // Verify progress bar was created with correct configuration
+    expect(SingleBar).toHaveBeenCalledWith(
+      {
+        format:
+          'Processing commits |{bar}| {percentage}% || {value}/{total} commits || ETA: {eta}s',
+        barCompleteChar: '\u2588',
+        barIncompleteChar: '\u2591',
+        hideCursor: true,
+      },
+      Presets.shades_classic
+    );
+
+    // Verify the progress bar constructor was called
+    expect(SingleBar).toHaveBeenCalledTimes(1);
 
     // Verify Git repositories were cloned
     expect(mockUpstreamGit.clone).toHaveBeenCalledOnce();
