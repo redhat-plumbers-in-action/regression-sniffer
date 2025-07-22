@@ -21,3 +21,7 @@ export function getSuccessMessage(message: string[]): string {
 
   return '#### Success' + '\n\n' + message.join('\n');
 }
+
+export function createMetadata(metadata: string[]): string {
+  return `<!-- regression-sniffer = ${JSON.stringify(metadata)} -->`;
+}

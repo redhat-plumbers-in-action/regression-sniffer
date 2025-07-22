@@ -1,6 +1,10 @@
 import { describe, expect, test } from 'vitest';
 
-import { getFailedMessage, getSuccessMessage } from '../../src/util';
+import {
+  createMetadata,
+  getFailedMessage,
+  getSuccessMessage,
+} from '../../src/util';
 
 describe('test basic utility functions', () => {
   test('getFailedMessage()', () => {
@@ -35,5 +39,12 @@ describe('test basic utility functions', () => {
       success1
       success2"
     `);
+  });
+
+  test('createMetadata()', () => {
+    const metadata = createMetadata(['abc123', 'def456', 'ghi789']);
+    expect(metadata).toMatchInlineSnapshot(
+      `"<!-- regression-sniffer = ["abc123","def456","ghi789"] -->"`
+    );
   });
 });

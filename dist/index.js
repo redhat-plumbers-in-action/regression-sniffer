@@ -31664,6 +31664,11 @@ class UpstreamRelatedCommits {
                 .map(singleResult => this.getTableEntry(singleResult))
                 .join('\n'));
     }
+    getMetadata() {
+        return this.results
+            .map(entry => entry.commits.map(commit => commit.sha))
+            .flat();
+    }
 }
 
 ;// CONCATENATED MODULE: ./src/util.ts
@@ -31682,6 +31687,9 @@ function getSuccessMessage(message) {
         return '';
     }
     return '#### Success' + '\n\n' + message.join('\n');
+}
+function createMetadata(metadata) {
+    return `<!-- regression-sniffer = ${JSON.stringify(metadata)} -->`;
 }
 
 ;// CONCATENATED MODULE: ./src/action.ts
@@ -31814,12 +31822,18 @@ async function action(octokit, pr) {
             await pr.removeLabel(config.labels['mention']);
         }
     }
+    const metadata = createMetadata([
+        ...detectedReverts.getMetadata(),
+        ...detectedFollowUps.getMetadata(),
+        ...detectedMentions.getMetadata(),
+    ]);
     await pr.setLabels(labels.add);
     err.push(...statusSummary, ...statusTables);
     if (err.length > 0) {
-        const status = 
-        // Show '#### Failed' header only when there is a failed message
-        getFailedMessage(err, statusSummary.length > 0) +
+        const status = metadata +
+            '\n' +
+            // Show '#### Failed' header only when there is a failed message
+            getFailedMessage(err, statusSummary.length > 0) +
             '\n\n' +
             getSuccessMessage(message);
         // Don't raise error if waive label is set
@@ -31830,7 +31844,7 @@ async function action(octokit, pr) {
     }
     // success message only when waive label is set otherwise don't show success message only failed message
     if (message.length > 0) {
-        return getSuccessMessage(message);
+        return metadata + '\n' + getSuccessMessage(message);
     }
 }
 // TODO:
