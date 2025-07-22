@@ -23,4 +23,5 @@ export declare class UpstreamRelatedCommits<R extends SupportedRelations> {
     getTableHeader(header?: ['commit', typeof this.relation.tableHeader]): string;
     getTableEntry(singleCommitRelation: (typeof this.results)[number]): string;
     getStatusMessage(): string;
+    getMetadata(): string[];
 }

@@ -65,4 +65,10 @@ export class UpstreamRelatedCommits<R extends SupportedRelations> {
         .join('\n')
     );
   }
+
+  getMetadata(): string[] {
+    return this.results
+      .map(entry => entry.commits.map(commit => commit.sha))
+      .flat();
+  }
 }

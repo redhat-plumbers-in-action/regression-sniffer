@@ -4,7 +4,7 @@ import { Config } from './config';
 import { raise } from './error';
 import { Git } from './git';
 import { UpstreamRelatedCommits } from './upstream';
-import { getFailedMessage, getSuccessMessage } from './util';
+import { createMetadata, getFailedMessage, getSuccessMessage } from './util';
 async function action(octokit, pr) {
     let message = [];
     let err = [];
@@ -127,12 +127,18 @@ async function action(octokit, pr) {
             await pr.removeLabel(config.labels['mention']);
         }
     }
+    const metadata = createMetadata([
+        ...detectedReverts.getMetadata(),
+        ...detectedFollowUps.getMetadata(),
+        ...detectedMentions.getMetadata(),
+    ]);
     await pr.setLabels(labels.add);
     err.push(...statusSummary, ...statusTables);
     if (err.length > 0) {
-        const status = 
-        // Show '#### Failed' header only when there is a failed message
-        getFailedMessage(err, statusSummary.length > 0) +
+        const status = metadata +
+            '\n' +
+            // Show '#### Failed' header only when there is a failed message
+            getFailedMessage(err, statusSummary.length > 0) +
             '\n\n' +
             getSuccessMessage(message);
         // Don't raise error if waive label is set
@@ -143,7 +149,7 @@ async function action(octokit, pr) {
     }
     // success message only when waive label is set otherwise don't show success message only failed message
     if (message.length > 0) {
-        return getSuccessMessage(message);
+        return metadata + '\n' + getSuccessMessage(message);
     }
 }
 // TODO:

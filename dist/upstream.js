@@ -34,5 +34,10 @@ export class UpstreamRelatedCommits {
                 .map(singleResult => this.getTableEntry(singleResult))
                 .join('\n'));
     }
+    getMetadata() {
+        return this.results
+            .map(entry => entry.commits.map(commit => commit.sha))
+            .flat();
+    }
 }
 //# sourceMappingURL=upstream.js.map

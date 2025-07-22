@@ -14,4 +14,7 @@ export function getSuccessMessage(message) {
     }
     return '#### Success' + '\n\n' + message.join('\n');
 }
+export function createMetadata(metadata) {
+    return `<!-- regression-sniffer = ${JSON.stringify(metadata)} -->`;
+}
 //# sourceMappingURL=util.js.map

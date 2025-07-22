@@ -194,4 +194,41 @@ describe('test UpstreamRelatedCommits class', () => {
       | https://github/owner/repo/commit/abc123 - _title_ | https://github.com/owner/repo/commit/abc789 |"
     `);
   });
+
+  test('getMetadata()', () => {
+    expect(mentions.getMetadata()).toMatchInlineSnapshot(`[]`);
+
+    mentions.addResultEntry(['abc123', 'abc456'], {
+      sha: 'abc123',
+      url: 'https://github/owner/repo/commit/abc123',
+      message: {
+        title: 'title',
+        cherryPick: [
+          {
+            sha: 'def456',
+          },
+        ],
+      },
+    });
+    mentions.addResultEntry(['abc789'], {
+      sha: 'abc789',
+      url: 'https://github/owner/repo/commit/abc123',
+      message: {
+        title: 'title',
+        cherryPick: [
+          {
+            sha: 'def456',
+          },
+        ],
+      },
+    });
+
+    expect(mentions.getMetadata()).toMatchInlineSnapshot(`
+      [
+        "abc123",
+        "abc456",
+        "abc789",
+      ]
+    `);
+  });
 });
