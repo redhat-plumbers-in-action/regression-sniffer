@@ -1,6 +1,5 @@
 import { getBooleanInput, warning } from '@actions/core';
 import { context } from '@actions/github';
-import { SingleBar, Presets } from 'cli-progress';
 import { Config } from './config';
 import { raise } from './error';
 import { Git } from './git';
@@ -25,32 +24,19 @@ async function action(octokit, pr) {
     const downstreamGit = new Git(context.repo.owner, context.repo.repo, 'abc_DownstreamRepo_cba');
     upstreamGit.clone();
     downstreamGit.clone();
-    // Create progress bar for commit processing
-    const progressBar = new SingleBar({
-        format: 'Processing commits |{bar}| {percentage}% || {value}/{total} commits || ETA: {eta}s',
-        barCompleteChar: '\u2588',
-        barIncompleteChar: '\u2591',
-        hideCursor: true,
-    }, Presets.shades_classic);
-    // Start progress bar
-    progressBar.start(pr.commits.length, 0);
-    // Process commits with progress tracking
-    for (let i = 0; i < pr.commits.length; i++) {
-        const commit = pr.commits[i];
+    pr.commits.forEach(async (commit) => {
         if (getBooleanInput('check-revert', { required: true })) {
             let reverts = [];
             commit.message.cherryPick.map(cherryPick => {
                 reverts.push(...upstreamGit.grepLog(cherryPick.sha, config.filters.revert));
             });
             // remove commits included in the pull request
-            reverts = reverts.filter(revert => !pr.isUpstreamCommitIncluded(revert));
-            // remove commits that are already backported to downstream (async operation)
-            const revertFilterPromises = reverts.map(async (revert) => !(await pr.isUpstreamCommitBackPorted(downstreamGit, config.filters['cherry-pick'], revert))
-                ? revert
-                : null);
-            const filteredReverts = (await Promise.all(revertFilterPromises)).filter(Boolean);
-            if (filteredReverts.length > 0) {
-                detectedReverts.addResultEntry(filteredReverts, commit);
+            reverts = reverts
+                .filter(revert => !pr.isUpstreamCommitIncluded(revert))
+                // remove commits that are already backported to downstream
+                .filter(async (revert) => !(await pr.isUpstreamCommitBackPorted(downstreamGit, config.filters['cherry-pick'], revert)));
+            if (reverts.length > 0) {
+                detectedReverts.addResultEntry(reverts, commit);
             }
         }
         if (getBooleanInput('check-follow-up', { required: true })) {
@@ -59,14 +45,12 @@ async function action(octokit, pr) {
                 followUps.push(...upstreamGit.grepLog(cherryPick.sha, config.filters['follow-up']));
             });
             // remove commits included in the pull request
-            followUps = followUps.filter(followUp => !pr.isUpstreamCommitIncluded(followUp));
-            // remove commits that are already backported to downstream (async operation)
-            const followUpFilterPromises = followUps.map(async (followUp) => !(await pr.isUpstreamCommitBackPorted(downstreamGit, config.filters['cherry-pick'], followUp))
-                ? followUp
-                : null);
-            const filteredFollowUps = (await Promise.all(followUpFilterPromises)).filter(Boolean);
-            if (filteredFollowUps.length > 0) {
-                detectedFollowUps.addResultEntry(filteredFollowUps, commit);
+            followUps = followUps
+                .filter(followUp => !pr.isUpstreamCommitIncluded(followUp))
+                // remove commits that are already backported to downstream
+                .filter(async (followUp) => !(await pr.isUpstreamCommitBackPorted(downstreamGit, config.filters['cherry-pick'], followUp)));
+            if (followUps.length > 0) {
+                detectedFollowUps.addResultEntry(followUps, commit);
             }
         }
         if (getBooleanInput('check-mentions', { required: true })) {
@@ -75,24 +59,18 @@ async function action(octokit, pr) {
                 mentions.push(...upstreamGit.grepLog(cherryPick.sha, config.filters.mention));
             });
             // remove commits included in the pull request
-            mentions = mentions.filter(mention => !pr.isUpstreamCommitIncluded(mention));
-            // remove commits that are already backported to downstream (async operation)
-            const mentionFilterPromises = mentions.map(async (mention) => !(await pr.isUpstreamCommitBackPorted(downstreamGit, config.filters['cherry-pick'], mention))
-                ? mention
-                : null);
-            const filteredMentions = (await Promise.all(mentionFilterPromises)).filter(Boolean);
-            // remove mention commits that are in follow-ups or reverts
-            const finalMentions = filteredMentions.filter(mention => !detectedFollowUps.results.some(({ commits }) => commits.some(commit => commit.sha === mention)) &&
+            mentions = mentions
+                .filter(mention => !pr.isUpstreamCommitIncluded(mention))
+                // remove commits that are already backported to downstream
+                .filter(async (mention) => !(await pr.isUpstreamCommitBackPorted(downstreamGit, config.filters['cherry-pick'], mention)))
+                // remove mention commits that are in follow-ups or reverts
+                .filter(mention => !detectedFollowUps.results.some(({ commits }) => commits.some(commit => commit.sha === mention)) &&
                 !detectedReverts.results.some(({ commits }) => commits.some(commit => commit.sha === mention)));
-            if (finalMentions.length > 0) {
-                detectedMentions.addResultEntry(finalMentions, commit);
+            if (mentions.length > 0) {
+                detectedMentions.addResultEntry(mentions, commit);
             }
         }
-        // Update progress bar
-        progressBar.update(i + 1);
-    }
-    // Stop progress bar
-    progressBar.stop();
+    });
     let statusSummary = [];
     let statusTables = [];
     if (detectedReverts.isRelatedCommitDetected()) {
