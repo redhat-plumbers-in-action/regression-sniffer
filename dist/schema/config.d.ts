@@ -4,34 +4,14 @@ export declare const configLabelsSchema: z.ZodObject<{
     revert: z.ZodString;
     mention: z.ZodString;
     waive: z.ZodString;
-}, "strip", z.ZodTypeAny, {
-    'follow-up': string;
-    revert: string;
-    mention: string;
-    waive: string;
-}, {
-    'follow-up': string;
-    revert: string;
-    mention: string;
-    waive: string;
-}>;
+}, z.core.$strip>;
 export type ConfigLabels = z.infer<typeof configLabelsSchema>;
 export declare const filtersSchema: z.ZodObject<{
-    'follow-up': z.ZodArray<z.ZodString, "many">;
-    revert: z.ZodArray<z.ZodString, "many">;
-    mention: z.ZodArray<z.ZodString, "many">;
-    'cherry-pick': z.ZodArray<z.ZodString, "many">;
-}, "strip", z.ZodTypeAny, {
-    'follow-up': string[];
-    revert: string[];
-    mention: string[];
-    'cherry-pick': string[];
-}, {
-    'follow-up': string[];
-    revert: string[];
-    mention: string[];
-    'cherry-pick': string[];
-}>;
+    'follow-up': z.ZodArray<z.ZodString>;
+    revert: z.ZodArray<z.ZodString>;
+    mention: z.ZodArray<z.ZodString>;
+    'cherry-pick': z.ZodArray<z.ZodString>;
+}, z.core.$strip>;
 export type Filters = z.infer<typeof filtersSchema>;
 export declare const configSchema: z.ZodObject<{
     upstream: z.ZodString;
@@ -40,60 +20,12 @@ export declare const configSchema: z.ZodObject<{
         revert: z.ZodString;
         mention: z.ZodString;
         waive: z.ZodString;
-    }, "strip", z.ZodTypeAny, {
-        'follow-up': string;
-        revert: string;
-        mention: string;
-        waive: string;
-    }, {
-        'follow-up': string;
-        revert: string;
-        mention: string;
-        waive: string;
-    }>;
+    }, z.core.$strip>;
     filters: z.ZodObject<{
-        'follow-up': z.ZodArray<z.ZodString, "many">;
-        revert: z.ZodArray<z.ZodString, "many">;
-        mention: z.ZodArray<z.ZodString, "many">;
-        'cherry-pick': z.ZodArray<z.ZodString, "many">;
-    }, "strip", z.ZodTypeAny, {
-        'follow-up': string[];
-        revert: string[];
-        mention: string[];
-        'cherry-pick': string[];
-    }, {
-        'follow-up': string[];
-        revert: string[];
-        mention: string[];
-        'cherry-pick': string[];
-    }>;
-}, "strip", z.ZodTypeAny, {
-    upstream: string;
-    labels: {
-        'follow-up': string;
-        revert: string;
-        mention: string;
-        waive: string;
-    };
-    filters: {
-        'follow-up': string[];
-        revert: string[];
-        mention: string[];
-        'cherry-pick': string[];
-    };
-}, {
-    upstream: string;
-    labels: {
-        'follow-up': string;
-        revert: string;
-        mention: string;
-        waive: string;
-    };
-    filters: {
-        'follow-up': string[];
-        revert: string[];
-        mention: string[];
-        'cherry-pick': string[];
-    };
-}>;
+        'follow-up': z.ZodArray<z.ZodString>;
+        revert: z.ZodArray<z.ZodString>;
+        mention: z.ZodArray<z.ZodString>;
+        'cherry-pick': z.ZodArray<z.ZodString>;
+    }, z.core.$strip>;
+}, z.core.$strip>;
 export type ConfigType = z.infer<typeof configSchema>;
