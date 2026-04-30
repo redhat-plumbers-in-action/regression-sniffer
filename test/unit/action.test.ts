@@ -90,10 +90,15 @@ describe('test action function', () => {
       clone: vi.fn(),
     };
 
-    vi.mocked(Git).mockImplementation((owner, repo, repoDir) => {
+    vi.mocked(Git).mockImplementation(function (
+      this: any,
+      owner: any,
+      repo: any,
+      repoDir: any
+    ) {
       if (repoDir === 'abc_UpstreamRepo_cba') return mockUpstreamGit as any;
       return mockDownstreamGit as any;
-    });
+    } as any);
 
     const mockDetectedInstance = {
       addResultEntry: vi.fn(),
@@ -103,9 +108,9 @@ describe('test action function', () => {
       results: [],
     };
 
-    vi.mocked(UpstreamRelatedCommits).mockReturnValue(
-      mockDetectedInstance as any
-    );
+    vi.mocked(UpstreamRelatedCommits).mockImplementation(function () {
+      return mockDetectedInstance as any;
+    } as any);
 
     const mockPullRequest = {
       commits: [
@@ -173,10 +178,15 @@ describe('test action function', () => {
       grepLog: vi.fn().mockReturnValue(['found-revert-commit']),
     };
 
-    vi.mocked(Git).mockImplementation((owner, repo, repoDir) => {
+    vi.mocked(Git).mockImplementation(function (
+      this: any,
+      owner: any,
+      repo: any,
+      repoDir: any
+    ) {
       if (repoDir === 'abc_UpstreamRepo_cba') return mockUpstreamGit as any;
       return { clone: vi.fn() } as any;
-    });
+    } as any);
 
     const mockDetectedReverts = {
       addResultEntry: vi.fn(),
@@ -195,9 +205,15 @@ describe('test action function', () => {
     };
 
     vi.mocked(UpstreamRelatedCommits)
-      .mockReturnValueOnce(mockDetectedReverts as any)
-      .mockReturnValueOnce(mockDetectedOthers as any)
-      .mockReturnValue(mockDetectedOthers as any);
+      .mockImplementationOnce(function () {
+        return mockDetectedReverts as any;
+      } as any)
+      .mockImplementationOnce(function () {
+        return mockDetectedOthers as any;
+      } as any)
+      .mockImplementation(function () {
+        return mockDetectedOthers as any;
+      } as any);
 
     const mockPullRequest = {
       commits: [
@@ -248,12 +264,14 @@ describe('test action function', () => {
       },
     });
 
-    vi.mocked(Git).mockReturnValue({
-      clone: vi.fn(),
-      grepLog: vi.fn().mockReturnValue([]),
+    vi.mocked(Git).mockImplementation(function () {
+      return {
+        clone: vi.fn(),
+        grepLog: vi.fn().mockReturnValue([]),
+      } as any;
     } as any);
 
-    vi.mocked(UpstreamRelatedCommits).mockReturnValue({
+    const mockUpstreamInstance = {
       addResultEntry: vi.fn(),
       isRelatedCommitDetected: vi.fn().mockReturnValue(false),
       getStatusMessage: vi.fn().mockReturnValue(''),
@@ -263,6 +281,10 @@ describe('test action function', () => {
         .mockReturnValueOnce(['revert-sha2', 'follow-up-sha2', 'mention-sha2'])
         .mockReturnValueOnce(['follow-up-sha3', 'mention-sha3']),
       results: [],
+    };
+
+    vi.mocked(UpstreamRelatedCommits).mockImplementation(function () {
+      return mockUpstreamInstance as any;
     } as any);
 
     const mockPullRequest = {
