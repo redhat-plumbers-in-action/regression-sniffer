@@ -41,5 +41,5 @@ outputs:
     description: Status message of the follow-up detection
 
 runs:
-  using: node20
+  using: node24
   main: dist/index.js
