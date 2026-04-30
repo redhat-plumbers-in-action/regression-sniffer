@@ -1868,7 +1868,7 @@ __metadata:
     prettier: "npm:3.7.0"
     typescript: "npm:5.9.3"
     vitest: "npm:3.2.4"
-    zod: "npm:4.1.13"
+    zod: "npm:4.4.1"
   languageName: unknown
   linkType: soft
 
@@ -2480,9 +2480,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:4.1.13":
-  version: 4.1.13
-  resolution: "zod@npm:4.1.13"
-  checksum: 10c0/d7e74e82dba81a91ffc3239cd85bc034abe193a28f7087a94ab258a3e48e9a7ca4141920cac979a0d781495b48fc547777394149f26be04c3dc642f58bbc3941
+"zod@npm:4.4.1":
+  version: 4.4.1
+  resolution: "zod@npm:4.4.1"
+  checksum: 10c0/55714c4bea81f7851ac46bf9edfde7c63ed6677a6cc8971ed3a526a079de3ffbe2bd56160327d22e070f72854fc4485b98ab7373255b6b69d64d9067caec864e
   languageName: node
   linkType: hard
